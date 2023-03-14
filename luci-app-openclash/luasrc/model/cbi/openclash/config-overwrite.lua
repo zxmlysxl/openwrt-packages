@@ -43,12 +43,29 @@ end
 o:value("0", translate("Disable"))
 o.default = "0"
 
-o = s:taboption("settings", Value, "tolerance", translate("Url-Test Group Tolerance (ms)"))
+o = s:taboption("settings", Value, "tolerance", translate("URL-Test Group Tolerance").."(ms)")
 o.description = translate("Switch To The New Proxy When The Delay Difference Between Old and The Fastest Currently is Greater Than This Value")
 o:value("0", translate("Disable"))
 o:value("100")
 o:value("150")
 o.datatype = "uinteger"
+o.default = "0"
+
+o = s:taboption("settings", Value, "urltest_interval_mod", translate("URL-Test Interval Modify").."(s)")
+o.description = translate("Modify The URL-Test Interval In The Config")
+o:value("0", translate("Disable"))
+o:value("180")
+o:value("300")
+o.datatype = "uinteger"
+o.default = "0"
+
+o = s:taboption("settings", Value, "urltest_address_mod", translate("URL-Test Address Modify"))
+o.description = translate("Modify The URL-Test Address In The Config")
+o:value("0", translate("Disable"))
+o:value("http://www.gstatic.com/generate_204")
+o:value("http://cp.cloudflare.com/generate_204")
+o:value("https://cp.cloudflare.com/generate_204")
+o:value("http://captive.apple.com/generate_204")
 o.default = "0"
 
 o = s:taboption("settings", Value, "github_address_mod", translate("Github Address Modify"))
@@ -58,15 +75,6 @@ o:value("https://fastly.jsdelivr.net/")
 o:value("https://testingcf.jsdelivr.net/")
 o:value("https://raw.fastgit.org/")
 o:value("https://cdn.jsdelivr.net/")
-o.default = "0"
-
-o = s:taboption("settings", Value, "urltest_address_mod", translate("Url-Test Address Modify"))
-o.description = translate("Modify The Url-Test Address In The Config")
-o:value("0", translate("Disable"))
-o:value("http://www.gstatic.com/generate_204")
-o:value("http://cp.cloudflare.com/generate_204")
-o:value("https://cp.cloudflare.com/generate_204")
-o:value("http://captive.apple.com/generate_204")
 o.default = "0"
 
 o = s:taboption("settings", ListValue, "log_level", translate("Log Level"))
@@ -280,6 +288,18 @@ o:value("360", translate("360"))
 o:value("qq", translate("QQ"))
 o.default = "0"
 
+o = s:taboption("meta", ListValue, "geodata_loader", translate("Geodata Loader Mode"))
+o:value("0", translate("Disable"))
+o:value("memconservative", translate("Memconservative"))
+o:value("standard", translate("Standard"))
+o.default = "0"
+
+o = s:taboption("meta", ListValue, "enable_geoip_dat", translate("Enable GeoIP Dat"))
+o.description = translate("Replace GEOIP MMDB With GEOIP Dat, Large Size File")..", "..font_red..bold_on..translate("Need Download First")..bold_off..font_off
+o.default = 0
+o:value("0", translate("Disable"))
+o:value("1", translate("Enable"))
+
 o = s:taboption("meta", Flag, "enable_meta_sniffer", font_red..bold_on..translate("Enable Sniffer")..bold_off..font_off)
 o.description = font_red..bold_on..translate("Sniffer Will Prevent Domain Name Proxy and DNS Hijack Failure")..bold_off..font_off
 o.default = 1
@@ -294,7 +314,7 @@ o.description = translate("Custom The Force and Skip Sniffing Doamin Lists")
 o.default = 0
 o:depends("enable_meta_sniffer", "1")
 
-sniffing_domain_force = s:taboption("meta", Value, "sniffing_domain_force", translate("Force Sniffing Domains Lists"))
+sniffing_domain_force = s:taboption("meta", Value, "sniffing_domain_force")
 sniffing_domain_force:depends("enable_meta_sniffer_custom", "1")
 sniffing_domain_force.template = "cbi/tvalue"
 sniffing_domain_force.description = translate("Will Override Dns Queries If Domains in The List")
@@ -314,7 +334,7 @@ function sniffing_domain_force.write(self, section, value)
 	end
 end
 
-sniffing_port_filter = s:taboption("meta", Value, "sniffing_port_filter", translate("Sniffing Ports Filter"))
+sniffing_port_filter = s:taboption("meta", Value, "sniffing_port_filter")
 sniffing_port_filter:depends("enable_meta_sniffer_custom", "1")
 sniffing_port_filter.template = "cbi/tvalue"
 sniffing_port_filter.description = translate("Will Only Sniffing If Ports in The List")
@@ -334,7 +354,7 @@ function sniffing_port_filter.write(self, section, value)
 	end
 end
 
-sniffing_domain_filter = s:taboption("meta", Value, "sniffing_domain_filter", translate("Force Sniffing Domains(sni) Filter"))
+sniffing_domain_filter = s:taboption("meta", Value, "sniffing_domain_filter")
 sniffing_domain_filter:depends("enable_meta_sniffer_custom", "1")
 sniffing_domain_filter.template = "cbi/tvalue"
 sniffing_domain_filter.description = translate("Will Disable Sniffing If Domains(sni) in The List")
@@ -353,18 +373,6 @@ function sniffing_domain_filter.write(self, section, value)
 		end
 	end
 end
-
-o = s:taboption("meta", ListValue, "geodata_loader", translate("Geodata Loader Mode"))
-o:value("0", translate("Disable"))
-o:value("memconservative", translate("Memconservative"))
-o:value("standard", translate("Standard"))
-o.default = "0"
-
-o = s:taboption("meta", ListValue, "enable_geoip_dat", translate("Enable GeoIP Dat"))
-o.description = translate("Replace GEOIP MMDB With GEOIP Dat, Large Size File")..", "..font_red..bold_on..translate("Need Download First")..bold_off..font_off
-o.default = 0
-o:value("0", translate("Disable"))
-o:value("1", translate("Enable"))
 
 ---- Rules Settings
 o = s:taboption("rules", Flag, "rule_source", translate("Enable Other Rules"))
